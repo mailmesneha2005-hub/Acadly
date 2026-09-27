@@ -7,17 +7,7 @@ A feature is a specific capability that allows the user to complete a particular
 For Acadly, features are derived from the student's main journey:
 
 ```text
-Add Academic Work
-       ↓
-Organize by Subject
-       ↓
-Set Deadline & Priority
-       ↓
-Track Status
-       ↓
-View Progress
-       ↓
-Maintain Streak
+Capture → Organize → Prioritize → Focus → Complete → Track → Stay Consistent
 ````
 
 The feature list is kept limited so that the core product can be completed without scope creep.
@@ -26,7 +16,7 @@ The feature list is kept limited so that the core product can be completed witho
 
 # 2. Modules & Features
 
-Acadly is divided into 5 logical modules.
+Acadly is divided into 6 logical modules. Daily Motivation is a lightweight Dashboard feature.
 
 | Module               | Feature            | Description                          | CRUD |
 | -------------------- | ------------------ | ------------------------------------ | ---- |
@@ -47,6 +37,12 @@ Acadly is divided into 5 logical modules.
 | Dashboard & Progress | Completion Rate    | Calculate completed work             | R    |
 | Dashboard & Progress | Subject Progress   | Show subject-wise progress           | R    |
 | Progress & Streak    | Streak Maintenance | Track consecutive productive days    | U/R  |
+| Focus Space          | Focus Session      | Start, pause, resume, and end a study session | C/U |
+| Focus Space          | Task-linked Focus  | Select and display the task being studied | R |
+| Focus Space          | Study Timer        | Choose a duration and track elapsed time | C/R |
+| Focus Space          | Ambient Sound      | Play or stop a small set of built-in ambient sounds | U |
+| Focus Space          | Session Summary    | Record duration and linked task when a session ends | C/R |
+| Dashboard & Progress | Daily Motivation   | Show one short quote that changes each local day | R |
 
 ### CRUD Legend
 
@@ -186,6 +182,12 @@ The dashboard provides a single overview of the student's academic workload.
 │ DSA      ████████░░ 80%         │
 │ DBMS     ██████░░░░ 60%         │
 │ Maths    █████░░░░░ 50%         │
+├─────────────────────────────────┤
+│ ✦ Today’s Motivation            │
+│ “Small progress is still progress.”│
+│                         — Acadly │
+├─────────────────────────────────┤
+│ [Open Focus Space]              │
 └─────────────────────────────────┘
 ```
 
@@ -249,7 +251,42 @@ The streak is based on meaningful academic activity, not simply opening the appl
 
 ---
 
-# 9. MVP Scope
+# 9. Module 6 — Focus Space
+
+Focus Space is a dedicated, distraction-light place to study inside Acadly. Keep the first version simple: one task, one timer, and a few optional ambient sounds.
+
+```text
+Dashboard → Focus Space → Select Task → Choose Duration → Choose Sound
+                                                        ↓
+Progress Updated ← Session Recorded ← End Session ← Study (pause/resume)
+```
+
+| MVP feature | Behavior |
+|---|---|
+| Start / pause / resume / end | Keep timer controls visible and keyboard accessible. Ending requires an intentional action. |
+| Task selection | Choose one existing task and show its title and subject throughout. Allow an unlinked session if there is no task to select. |
+| Duration | Select a preset or enter a duration; show remaining time clearly. |
+| Ambient sound | Offer a few built-in, royalty-free options with Play/Stop. Sound is optional and off by default. |
+| Session tracking | Record start, end, elapsed focused minutes, and optional task link. Exclude paused time. |
+| Session summary | Show focused time and task; offer a clear return to the task or dashboard. |
+
+```text
+Ready → Studying → Paused → Studying → Summary
+           ├──────────────→ End early ────────┘
+           └── Timer reaches zero → Summary
+```
+
+Save completed sessions. If the student ends early, offer to save actual focused time or discard. Do not automatically mark the linked task complete; the student controls task status. Refresh focus-time totals after recording and update a streak only if its existing meaningful-activity rule is met.
+
+---
+
+# 10. Daily Motivation
+
+Place one compact **Today’s Motivation** card below the dashboard’s workload and next-up content. Display one short quote and attribution; choose it by the student’s local calendar date so it changes once a day, not on every refresh. Keep it decorative and optional, with no extra action or gamification dependency.
+
+---
+
+# 11. MVP Scope
 
 Every feature should answer one question:
 
@@ -273,10 +310,15 @@ Features required for the core journey remain in the MVP. Optional features are 
 | Completion Rate            | Measure progress            |
 | Subject Progress           | Understand subject workload |
 | Streak Maintenance         | Encourage consistency       |
+| Focus Space                | Start and record study sessions |
+| Task-linked timer          | Keep the current task visible while studying |
+| Basic ambient sound        | Offer a few simple optional sound choices |
+| Session summary            | Show recorded focused time and linked task |
+| Daily Motivation           | Display one short daily quote on Overview |
 
 ---
 
-# 10. Post-MVP
+# 12. Post-MVP
 
 These features are useful but not required for the first working version.
 
@@ -288,10 +330,13 @@ These features are useful but not required for the first working version.
 | Estimated Workload  | Requires extra user input      |
 | Notes & Attachments | Not required for task tracking |
 | Advanced Search     | Basic filtering is sufficient  |
+| Custom music / playlists | A few built-in ambient choices cover MVP |
+| Advanced focus analytics | Basic session duration tracking is enough |
+| XP / Levels / Badges | Not required for the study loop |
 
 ---
 
-# 11. Future Scope — Gamification
+# 13. Future Scope — Gamification
 
 Gamification will be considered after the core product is stable.
 
@@ -322,14 +367,10 @@ These are intentionally excluded from the current MVP.
 
 ---
 
-# 12. Main User Flow
+# 14. Main User Flow
 
 ```text
-                START
-                  ↓
-             Dashboard
-                  ↓
-              Add Task
+START → Dashboard → Add Task
                   ↓
         Subject + Task Type
                   ↓
@@ -355,9 +396,15 @@ These are intentionally excluded from the current MVP.
          Dashboard
 ```
 
+```text
+Dashboard → Focus Space → Choose Task / Duration / Sound → Start
+          → Study ↔ Pause / Resume → End / Timer Complete → Summary
+          → Session Recorded → Focus Progress + eligible Streak refresh
+```
+
 ---
 
-# 13. Feature Dependencies
+# 15. Feature Dependencies
 
 ```text
 User
@@ -374,16 +421,21 @@ User
        ├── Upcoming
        ├── Overdue
        ├── Progress
-       └── Streak
+       ├── Streak
+       ├── Daily Motivation
+       └── Focus Space
+             ├── Optional task link → Tasks
+             ├── Timer + ambient sound
+             └── Session record → Focus progress / Streak rule
 ```
 
 For example, progress depends on task status, while subject-wise progress depends on the relationship between subjects and tasks.
 
 ---
 
-# 14. Technical Blueprint
+# 16. Technical Blueprint
 
-After finalizing the MVP features, each feature can be mapped to its API and database requirements. The source guide specifically recommends defining the endpoint, request payload and affected database tables. 
+The endpoint summary below is a quick map. For request/response shapes, validation, authentication, status transitions, and error behavior, see the separate [API Contract](6-api-contract.md). The source guide recommends defining the endpoint, request payload and affected database tables.
 
 | Feature   | API              | Database |
 | --------- | ---------------- | -------- |
@@ -392,6 +444,8 @@ After finalizing the MVP features, each feature can be mapped to its API and dat
 | Dashboard | `/api/dashboard` | Tasks    |
 | Progress  | `/api/progress`  | Tasks    |
 | Streak    | `/api/streak`    | Activity |
+| Focus Sessions | `/api/focus-sessions` | FocusSessions |
+| Daily Motivation | `/api/daily-quote` | Quote catalogue or static bundle |
 
 ### REST Routes
 
@@ -410,11 +464,14 @@ DELETE  /api/subjects/:id
 GET     /api/dashboard
 GET     /api/progress
 GET     /api/streak
+POST    /api/focus-sessions
+GET     /api/focus-sessions
+GET     /api/daily-quote
 ```
 
 ---
 
-# 15. Edge Cases & UI States
+# 17. Edge Cases & UI States
 
 Feature design should consider more than the normal flow. The project guide specifically highlights empty states, duplicate data, invalid input, dependencies and loading/error states. 
 
@@ -456,9 +513,19 @@ Your streak has ended.
 Start again today.
 ```
 
+### Focus Space
+
+```text
+No tasks yet → Start an unlinked session or return to add a task.
+Pause       → Timer stops; the session can resume.
+End early   → Confirm save or discard; save actual focused minutes.
+Timer done  → Show summary; do not mark the task complete automatically.
+Sound fails → Keep timer usable and explain sound is unavailable.
+```
+
 ---
 
-# 16. Final MVP Feature Set
+# 18. Final MVP Feature Set
 
 The first working version of Acadly should contain:
 
@@ -475,6 +542,10 @@ The first working version of Acadly should contain:
 10. Completion Rate
 11. Subject Progress
 12. Streak Maintenance
+13. Focus Space with task selection and timer
+14. Optional built-in ambient sounds
+15. Focus-session tracking and summary
+16. Daily Motivation quote on Overview
 ```
 
 ### Core Product Loop
@@ -484,15 +555,7 @@ CAPTURE
    ↓
 ORGANIZE
    ↓
-PRIORITIZE
-   ↓
-COMPLETE
-   ↓
-TRACK
-   ↓
-STAY CONSISTENT
-   ↓
-STREAK
+PRIORITIZE → FOCUS → COMPLETE → TRACK → STAY CONSISTENT → STREAK
 ```
 
 > **Acadly turns scattered academic work into a clear, manageable and trackable workload.**

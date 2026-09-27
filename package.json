@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "firebase": "^12.19.0"
+  },
+  "devDependencies": {
+    "vite": "^7.1.7"
+  },
+"scripts": {
+  "dev": "vite acadly-ui --host localhost",
+  "build": "vite acadly-ui",
+  "preview": "vite acadly-ui --host localhost"
+}
+}

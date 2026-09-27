@@ -2,7 +2,7 @@
 
 > **Acadly turns college students’ scattered assignments, quizzes, and exams into one clear plan.**
 >
-> Core loop: **Capture → Organize → Prioritize → Track → Complete**
+> Core loop: **Capture → Organize → Prioritize → Focus → Complete → Track**
 
 **Account flow added to this UI/UX scope:** email/password sign up, log in, and password reset for student accounts. The original project notes did not define authentication; this document assumes a single student role, no teacher/admin role picker, and email/password as the first sign-in method.
 
@@ -17,6 +17,7 @@
 | **My Tasks** | Find and update academic work | Search; All, Today, Upcoming, Overdue, Completed filters; task rows | **Add a task** | Row skeletons / “No tasks yet” + Add task / task error + Retry / task moves to the right date or status group |
 | **Subjects** | Understand work by class | Subject cards; task counts; completed and remaining work; progress | **Add subject** | Card skeletons / “Start with one subject” + Add subject / subject error + Retry / new or edited subject appears |
 | **Insights** | Understand workload and progress | Weekly due-date graph; completion and overdue totals; subject progress | **View tasks** | Chart skeletons / “Add tasks to see a pattern” / insights error + Retry / graph and metrics update |
+| **Focus Space** | Study on one task or focus without a task | Task picker; duration; optional ambient sound; timer; current task; pause/end controls; session summary | **Start focus session** (setup) / **Resume** (paused) | Setup loader / no tasks + Add task or start unlinked / timer or sound error with usable controls / session summary saved and focus totals refresh |
 
 **Roles:** Sign Up is for a new student; Log In and Reset Password are for returning student accounts. Academic screens are for the signed-in student. Teacher/admin roles and LMS replacement are outside the first release.
 
@@ -38,6 +39,13 @@ My Tasks ──→ Task status updates ──→ Overview + subject progress ref
 ```
 
 The task form is an overlay within **My Tasks**, not another main screen. A student can reach task creation directly from Overview, then save and see it in the list. Keep Cancel and a clear return path on every form.
+
+**Overview card:** add a small **Today’s Motivation** quote and attribution beneath due-today / overdue and next-up content. Keep it short, date-stable in the student’s local timezone, and without a CTA.
+
+```text
+Focus Space → Select task (or no task) → Duration → Optional sound → Start
+          → Study ↔ Pause / Resume → End or timer completes → Summary saved
+```
 
 ### Sign-up and log-in wireframes
 
@@ -172,6 +180,10 @@ After sign up, take the student to Overview’s first-use empty state. Avoid a s
 │ DBMS             ███░░░░░░░ 33%  │
 │ Operating Systems█████░░░░░ 50%  │
 │ Discrete Maths   █████░░░░░ 50%  │
+├──────────────────────────────────┤
+│ ✦ TODAY’S MOTIVATION             │
+│ “Small progress is still progress.”│
+│                         — Acadly  │
 └──────────────────────────────────┘
 ```
 
@@ -184,10 +196,12 @@ After sign up, take the student to Overview’s first-use empty state. Avoid a s
 │ My Tasks     │ Your week, in focus.                     [＋ Add a task] │
 │ Subjects     ├────────────┬────────────┬────────────┬──────────────────┤
 │ Insights     │ Due today 1│ Past due 1 │ To do 5    │ Done 44%         │
+│ Focus Space  ├─────────────────────────────────────────────────────────┤
 │              ├──────────────────────────────────┬─────────────────────┤
 │              │ Weekly workload graph            │ Start here         │
 │              ├──────────────────────────────────┼─────────────────────┤
 │              │ Subject progress                 │ Upcoming deadlines  │
+│              │ Today’s Motivation               │ [Open Focus Space]  │
 └──────────────┴──────────────────────────────────┴─────────────────────┘
 ```
 
@@ -275,6 +289,7 @@ Evaluate Completed first so a completed task with an old due date never appears 
 | My Tasks | Task-row skeletons | “Your plan starts here.” **Add a task** | “We couldn’t load your tasks.” **Retry** | New task appears in date group; completed task moves to Completed. |
 | Subjects | Subject-card skeletons | “Start with one subject. Every task gets a home.” **Add subject** | “We couldn’t load your subjects.” **Retry** | New subject appears and is selectable in the task form. |
 | Insights | Metric and graph skeletons | “Add tasks to see how your workload is spaced.” **View tasks** | “We couldn’t load your insights.” **Retry** | Graphs and progress totals recalculate. |
+| Focus Space | Setup or timer skeleton | No tasks: offer Add task or start an unlinked session | Timer error keeps recovery controls; sound error leaves timer usable | Summary shows actual focused time; record session and refresh totals. |
 
 **Form feedback:** keep entered values after validation errors; put the message beside the field; mark required fields; disable the primary submit action while submitting and show a spinner; show a short confirmation after save. Always retain Back/Cancel. Auth forms should use the correct email/password input types and password autocomplete behavior.
 
@@ -293,4 +308,4 @@ Evaluate Completed first so a completed task with an old due date never appears 
 
 ### Review checklist
 
-□ Most important information appears first; one primary CTA per screen.  □ Every data screen has loading, empty, error, and success states.  □ At 375px, cards stack and no content clips.  □ Text contrast ≥ 4.5:1; meaningful chart graphics ≥ 3:1.  □ Inputs have labels; controls have accessible names and keyboard focus.  □ Main task takes no more than 3 steps; Back/Cancel is always available.  □ Same action uses the same words and visual style.  □ Sample content uses real academic tasks, Indian names, and realistic dates.
+□ Most important information appears first; one primary CTA per screen.  □ Every data screen has loading, empty, error, and success states.  □ At 375px, cards stack and no content clips.  □ Text contrast ≥ 4.5:1; meaningful chart graphics ≥ 3:1.  □ Inputs have labels; controls have accessible names and keyboard focus.  □ Main task takes no more than 3 steps; Back/Cancel is always available.  □ Same action uses the same words and visual style.  □ Focus pause time is excluded; ending a session never completes a task automatically.  □ Daily quote stays the same for the local calendar day.  □ Sample content uses real academic tasks, Indian names, and realistic dates.
