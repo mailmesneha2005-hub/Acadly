@@ -5,9 +5,9 @@
   "devDependencies": {
     "vite": "^7.1.7"
   },
-"scripts": {
-  "dev": "vite acadly-ui --host localhost",
-  "build": "vite acadly-ui",
-  "preview": "vite acadly-ui --host localhost"
-}
+  "scripts": {
+    "dev": "vite acadly-ui --host localhost",
+    "build": "vite build acadly-ui",
+    "preview": "vite acadly-ui --host localhost"
+  }
 }
